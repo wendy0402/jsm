@@ -36,19 +36,24 @@ class User
     state :master
 
     event :confirm do
-      transition from: [:unconfirmed], to: :beginner do
-        validates :registration_validation
-      end
+      transition from: [:unconfirmed], to: :beginner
     end
 
     event :level_up do
-      transition from: [:beginner], to: :intermediate do
-        validates :completion_beginner_level_validation
-      end
+      transition from: [:beginner], to: :intermediate
+      transition from: [:intermediate], to: :master
+    end
 
-      transition from: [:intermediate], to: :master do
-        validates :completion_intermediate_level_validation
-      end
+    validation :beginner do
+      validates :registration_validation
+    end
+
+    validation :intermediate do
+      validates :completion_beginner_level_validation
+    end
+
+    validation :master do
+      validates :completion_intermediate_level_validation
     end
   end
 
