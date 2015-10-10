@@ -22,7 +22,60 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+JSM is Just State Machine. The purpose is to simplify and increase the clarity of code related with state. JSM support validation in `ActiveModel::Model`. Many great gem related with state machine, mostly can not do this, so I build this JSM. to use it follow this:
+
+```ruby
+class User
+  extend ActiveModel::Model
+  include JSM
+
+  JSM do
+    initial_state :unconfirmed
+    state :beginner
+    state :intermediate
+    state :master
+
+    event :confirm do
+      transition from: [:unconfirmed], to: :beginner do
+        validates :registration_validation
+      end
+    end
+
+    event :level_up do
+      transition from: [:beginner], to: :intermediate do
+        validates :completion_beginner_level_validation
+      end
+
+      transition from: [:intermediate], to: :master do
+        validates :completion_intermediate_level_validation
+      end
+    end
+  end
+
+  def completion_beginner_level_validation
+    unless current_level == total_complete_beginner
+      errors.add(:base, 'Please complete all beginner task')
+    end
+  end
+
+  def completion_intermediate_level_validation
+    unless current_level == total_complete_intermediate
+      errors.add(:base, 'Please complete all intermediate task')
+    end
+  end
+
+
+  def registration_validation
+    if email_confirmation.blank?
+      errors.add(:email_confirmation, 'has not been done yet')
+    end
+
+    if address.blank?
+      errors.add(:address, 'can not be blank')
+    end
+  end
+end
+```
 
 ## Development
 
@@ -38,4 +91,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
