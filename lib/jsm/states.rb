@@ -6,7 +6,7 @@ class Jsm::States
   # @param object: it's the base class that use the Jsm
   # @param obj_column: it's the base class column(or instance variable) that is affected by states
   def initialize(object, obj_column)
-    @object = object
+    @obj_klass = object
     @obj_column = obj_column
     @list = []
   end

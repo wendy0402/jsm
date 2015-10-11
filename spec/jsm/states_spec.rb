@@ -4,7 +4,7 @@ describe Jsm::States do
   describe '.initialize' do
     it 'require the base class model and column' do
       states = Jsm::States.new(state_model, :my_state)
-      expect(states.object).to eq(state_model)
+      expect(states.obj_klass).to eq(state_model)
       expect(states.obj_column).to eq(:my_state)
     end
   end
