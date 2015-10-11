@@ -1,4 +1,4 @@
-# Jsm::States job is to collect all states and validate new state
+# Jsm::States job is to collect all states
 class Jsm::States
   attr_reader :obj_klass, :obj_column, :list
   ::Jsm::State = Struct.new(:name, :initial)
