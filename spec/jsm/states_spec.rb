@@ -1,17 +1,14 @@
 describe Jsm::States do
-  let(:state_model) { Class.new { attr_accessor :my_state}.new }
+  let(:states) { Jsm::States.new(:my_state) }
 
   describe '.initialize' do
     it 'require the base class model and column' do
-      states = Jsm::States.new(state_model, :my_state)
-      expect(states.obj_klass).to eq(state_model)
+      states = Jsm::States.new(:my_state)
       expect(states.obj_column).to eq(:my_state)
     end
   end
 
   describe '.add_state' do
-    let(:states) { Jsm::States.new(state_model, :my_state) }
-
     it 'register new state' do
       states.add_state(:x)
       expect(states.list[0].name).to eq(:x)
@@ -56,7 +53,6 @@ describe Jsm::States do
   end
 
   describe '.initial_state' do
-    let(:states) { Jsm::States.new(state_model, :my_state) }
     before do
       states.add_state(:x, initial: true)
       states.add_state(:y)
@@ -68,7 +64,6 @@ describe Jsm::States do
   end
 
   describe 'has_state?' do
-    let(:states) { Jsm::States.new(state_model, :my_state) }
     context 'list has states' do
       before do
         states.add_state(:x, initial: true)

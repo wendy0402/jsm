@@ -1,6 +1,6 @@
 describe Jsm::Event do
   let(:state_model) { Class.new { attr_accessor :my_state}.new }
-  let(:states) { Jsm::States.new(state_model, :my_state) }
+  let(:states) { Jsm::States.new(:my_state) }
 
   describe '.initialize' do
     it 'require event name and states' do

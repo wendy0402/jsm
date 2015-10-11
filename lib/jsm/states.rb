@@ -1,12 +1,10 @@
 # Jsm::States job is to collect all states
 class Jsm::States
-  attr_reader :obj_klass, :obj_column, :list
+  attr_reader :obj_column, :list
   ::Jsm::State = Struct.new(:name, :initial)
 
-  # @param object: it's the base class that use the Jsm
   # @param obj_column: it's the base class column(or instance variable) that is affected by states
-  def initialize(object, obj_column)
-    @obj_klass = object
+  def initialize(obj_column)
     @obj_column = obj_column
     @list = []
   end
