@@ -25,60 +25,53 @@ Or install it yourself as:
 JSM is Just State Machine. The purpose is to simplify and increase the clarity of code related with state. JSM support validation in `ActiveModel::Model`. Many great gem related with state machine, mostly can not do this, so I build this JSM. to use it follow this:
 
 ```ruby
-class User
-  extend ActiveModel::Model
-  include JSM
+class UserStateMachine
+  include Jsm::Base
+  include Jsm::ActiveModel
 
-  JSM do
-    initial_state :unconfirmed
-    state :beginner
-    state :intermediate
-    state :master
+  column_name :level
 
-    event :confirm do
-      transition from: [:unconfirmed], to: :beginner
-    end
+  state :unconfirmed, initial: true
+  state :beginner
+  state :intermediate
+  state :master
 
-    event :level_up do
-      transition from: [:beginner], to: :intermediate
-      transition from: [:intermediate], to: :master
-    end
-
-    validation :beginner do
-      validates :registration_validation
-    end
-
-    validation :intermediate do
-      validates :completion_beginner_level_validation
-    end
-
-    validation :master do
-      validates :completion_intermediate_level_validation
+  validation :beginner do
+    validate :registration_validation do |user|
+      user.errors.add(:email_confirmation, 'has not been done yet') if user.confirmation.blank?
+      user.errors.add(:address, 'can not be blank') if user.address.blank?
     end
   end
 
-  def completion_beginner_level_validation
-    unless current_level == total_complete_beginner
-      errors.add(:base, 'Please complete all beginner task')
+  validation :intermediate do
+    validate :completion_beginner_level_validation do |base|
+      unless user.current_level == min_level_intermediate
+        user.errors.add(:base, 'Please complete all beginner task')
+      end
     end
   end
 
-  def completion_intermediate_level_validation
-    unless current_level == total_complete_intermediate
-      errors.add(:base, 'Please complete all intermediate task')
+  validation :master do
+    validates :completion_intermediate_level_validation do |base|
+      unless user.current_level == total_complete_intermediate
+        errors.add(:base, 'Please complete all intermediate task')
+      end
     end
   end
 
-
-  def registration_validation
-    if email_confirmation.blank?
-      errors.add(:email_confirmation, 'has not been done yet')
-    end
-
-    if address.blank?
-      errors.add(:address, 'can not be blank')
-    end
+  event :confirm do
+    transition from: [:unconfirmed], to: :beginner
   end
+
+  event :level_up do
+    transition from: [:beginner], to: :intermediate
+    transition from: [:intermediate], to: :master
+  end
+end
+
+class User < ActiveRecord::Base
+  include Jsm::DSL
+  use_jsm UserStateMachine
 end
 ```
 
