@@ -3,10 +3,11 @@
 class Jsm::Event
   attr_reader :name, :states, :transitions
   ::Jsm::Transition = Struct.new(:from, :to)
-  def initialize(name, params = {})
+  def initialize(name, params = {}, &block)
     @name = name
     @states = params[:states]
     @transitions = []
+    instance_eval(&block) if block_given?
   end
 
   # register a transition into the. When Event is executed,
