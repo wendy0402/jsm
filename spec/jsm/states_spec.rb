@@ -1,12 +1,5 @@
 describe Jsm::States do
-  let(:states) { Jsm::States.new(:my_state) }
-
-  describe '.initialize' do
-    it 'require the base class model and column' do
-      states = Jsm::States.new(:my_state)
-      expect(states.obj_column).to eq(:my_state)
-    end
-  end
+  let(:states) { Jsm::States.new }
 
   describe '.add_state' do
     it 'register new state' do
