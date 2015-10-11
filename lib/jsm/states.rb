@@ -24,7 +24,7 @@ class Jsm::States
       raise Jsm::InvalidStateError,"can not set initial state to #{state_name}. current initial state is #{initial_state.name}"
     end
 
-    state = Jsm::State.new(state_name, initial)
+    state = create_state(state_name, initial)
     list.push(state)
 
     if state.initial
@@ -37,6 +37,10 @@ class Jsm::States
   end
 
   private
+
+  def create_state(state_name, initial)
+    Jsm::State.new(state_name, initial)
+  end
 
   def state_unique?(state_name)
     list.all? {|state| state.name != state_name }
