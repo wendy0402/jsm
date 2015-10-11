@@ -1,3 +1,5 @@
+# Jsm::Event handle event related task registered by the main module.
+# It do transition process from one state to another state
 class Jsm::Event
   attr_reader :name, :states, :transitions
   ::Jsm::Transition = Struct.new(:from, :to)
@@ -7,6 +9,11 @@ class Jsm::Event
     @transitions = []
   end
 
+  # register a transition into the. When Event is executed,
+  # these transitions is transitioning an object into `to` state,
+  # if their current state match with one of the `from` state.
+  # the argument input is params `from` and params `to`.
+  # Both params should be exist
   def transition(params = {})
     validate_params(params)
     validate_state_transition(params)
