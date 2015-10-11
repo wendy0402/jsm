@@ -29,7 +29,7 @@ class UserStateMachine
   include Jsm::Base
   include Jsm::ActiveModel
 
-  column_name :level
+  attribute_name :level
 
   state :unconfirmed, initial: true
   state :beginner
