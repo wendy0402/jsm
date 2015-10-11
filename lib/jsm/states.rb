@@ -1,6 +1,6 @@
 # Jsm::States job is to collect all states and validate new state
 class Jsm::States
-  attr_reader :object, :obj_column, :list
+  attr_reader :obj_klass, :obj_column, :list
   ::Jsm::State = Struct.new(:name, :initial)
 
   # @param object: it's the base class that use the Jsm
