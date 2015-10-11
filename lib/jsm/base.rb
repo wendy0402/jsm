@@ -1,6 +1,8 @@
+# this module used as extension for state machine class
+# The DSL is built to define the state, event, and transition that happen
 module Jsm::Base
-  def column(column)
-    @column = column
+  def attribute_name(attribute_name)
+    @attribute_name = attribute_name
   end
 
   def state(name, params = {})
