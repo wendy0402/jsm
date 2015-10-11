@@ -17,10 +17,23 @@ describe Jsm::States do
       expect(states.list[0].name).to eq(:x)
     end
 
+    it 'can register more than one state' do
+      states.add_state(:x)
+      states.add_state(:y)
+      expect(states.list.map(&:name)).to match_array([:x, :y])
+    end
+
     it 'can register initial state' do
       states.add_state(:x, initial: true)
       expect(states.list[0].name).to eq(:x)
       expect(states.list[0].initial).to eq(true)
+    end
+
+    it 'can register initial state with others states' do
+      states.add_state(:w, initial: true)
+      states.add_state(:x)
+      states.add_state(:y)
+      expect(states.list.map(&:name)).to match_array([:w, :x, :y])
     end
 
     context 'exception' do
