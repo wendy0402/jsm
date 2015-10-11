@@ -53,4 +53,26 @@ describe Jsm::States do
       expect(states.initial_state.name).to eq(:x)
     end
   end
+
+  describe 'has_state?' do
+    let(:states) { Jsm::States.new(state_model, :my_state) }
+    context 'list has states' do
+      before do
+        states.add_state(:x, initial: true)
+        states.add_state(:y)
+      end
+
+      it 'return true if state present' do
+        expect(states.has_state?(:x)).to be_truthy
+      end
+
+      it 'return false if state doesnt present' do
+        expect{ states.has_state?(:z).to be_falsey }
+      end
+    end
+
+    context 'list doesnt have any state' do
+      it { expect( states.has_state?(:y)).to be_falsey }
+    end
+  end
 end

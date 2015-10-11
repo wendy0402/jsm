@@ -36,6 +36,10 @@ class Jsm::States
     @initial_state
   end
 
+  def has_state?(state_name)
+    list.any? { |state| state.name == state_name}
+  end
+
   private
 
   def create_state(state_name, initial)
