@@ -44,19 +44,19 @@ describe Jsm::Event do
 
       describe 'InvalidTransitionError' do
         it '`from` have state outside `states` list' do
-          expect{ event.transition from: [:g, :x], to: :y }.to raise_error Jsm::InvalidTransitionError, "'from' params is invalid. there is no state g in list"
+          expect{ event.transition from: [:g, :x], to: :y }.to raise_error Jsm::InvalidTransitionError, "parameter from is invalid. there is no state g in list"
         end
 
         it 'all states in `from` is outside `states` list' do
-          expect{ event.transition from: [:g, :t], to: :y }.to raise_error Jsm::InvalidTransitionError, "'from' params is invalid. there is no state g, t in list"
+          expect{ event.transition from: [:g, :t], to: :y }.to raise_error Jsm::InvalidTransitionError, "parameter from is invalid. there is no state g, t in list"
         end
 
         it '`from` string params outside state list' do
-          expect{ event.transition from: :g, to: :y }.to raise_error Jsm::InvalidTransitionError, "'from' params is invalid. there is no state g in list"
+          expect{ event.transition from: :g, to: :y }.to raise_error Jsm::InvalidTransitionError, "parameter from is invalid. there is no state g in list"
         end
 
         it '`to` state is outside state list' do
-          expect{ event.transition from: :x, to: :n }.to raise_error Jsm::InvalidTransitionError, "'to' params is invalid. there is no state n in list"
+          expect{ event.transition from: :x, to: :n }.to raise_error Jsm::InvalidTransitionError, "parameter to is invalid. there is no state n in list"
         end
 
         it '`from` and `to` state is outside state list' do
@@ -66,11 +66,11 @@ describe Jsm::Event do
 
       describe 'ArgumentError' do
         it 'params from is empty' do
-          expect{ event.transition to: :n }.to raise_error ArgumentError, "transition is invalid, missing from params"
+          expect{ event.transition to: :n }.to raise_error ArgumentError, "transition is invalid, missing required parameter from"
         end
 
         it 'params to is empty' do
-          expect{ event.transition from: :n }.to raise_error ArgumentError, "transition is invalid, missing to params"
+          expect{ event.transition from: :n }.to raise_error ArgumentError, "transition is invalid, missing required parameter to"
         end
       end
     end

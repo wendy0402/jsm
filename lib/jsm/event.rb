@@ -27,13 +27,13 @@ class Jsm::Event
   def validate_params(params = {})
     from = params[:from]
     if (from.respond_to?(:empty) && from.empty?) || !from
-      raise ArgumentError, "transition is invalid, missing from params"
+      raise ArgumentError, "transition is invalid, missing required parameter from"
     end
 
     to = params[:to]
 
     if (to.respond_to?(:empty) && to.empty?) || !to
-      raise ArgumentError, "transition is invalid, missing to params"
+      raise ArgumentError, "transition is invalid, missing required parameter to"
     end
   end
 
@@ -42,11 +42,11 @@ class Jsm::Event
     to = params[:to]
     invalid_state = from.select {|state_name| !states.has_state?(state_name) }
     unless invalid_state.empty?
-      raise Jsm::InvalidTransitionError, "'from' params is invalid. there is no state #{invalid_state.join(', ')} in list"
+      raise Jsm::InvalidTransitionError, "parameter from is invalid. there is no state #{invalid_state.join(', ')} in list"
     end
 
     unless states.has_state?(to)
-      raise Jsm::InvalidTransitionError, "'to' params is invalid. there is no state #{to} in list"
+      raise Jsm::InvalidTransitionError, "parameter to is invalid. there is no state #{to} in list"
     end
   end
 end
