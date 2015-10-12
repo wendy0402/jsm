@@ -31,7 +31,7 @@ class UserStateMachine
 
   attribute_name :level
 
-  state :unconfirmed, initial: true
+  state :unconfirmed
   state :beginner
   state :intermediate
   state :master
@@ -70,7 +70,7 @@ class UserStateMachine
 end
 
 class User < ActiveRecord::Base
-  include Jsm::DSL
+  include Jsm::Client
   use_jsm UserStateMachine
 end
 ```

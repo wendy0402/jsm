@@ -14,9 +14,9 @@ module Jsm::Base
     @states.list
   end
 
-  def initial_state
-    @states.initial_state
-  end
+  # def initial_state
+  #   @states.initial_state
+  # end
 
   def event(name, &block)
     @events ||= {}

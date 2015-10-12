@@ -15,22 +15,22 @@ class Jsm::States
     if !state_unique?(state_name)
       raise Jsm::NotUniqueStateError, "state #{state_name} has been defined"
     end
-
-    if initial && !initial_state.nil?
-      raise Jsm::InvalidStateError,"can not set initial state to #{state_name}. current initial state is #{initial_state.name}"
-    end
+    #
+    # if initial && !initial_state.nil?
+    #   raise Jsm::InvalidStateError,"can not set initial state to #{state_name}. current initial state is #{initial_state.name}"
+    # end
 
     state = create_state(state_name, initial)
     list.push(state)
-
-    if state.initial
-      @initial_state = state
-    end
+    #
+    # if state.initial
+    #   @initial_state = state
+    # end
   end
-
-  def initial_state
-    @initial_state
-  end
+  # 
+  # def initial_state
+  #   @initial_state
+  # end
 
   def has_state?(state_name)
     list.any? { |state| state.name == state_name}
