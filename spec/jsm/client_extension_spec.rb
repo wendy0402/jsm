@@ -66,5 +66,25 @@ describe Jsm::ClientExtension do
         expect(instance_model.move).to be_falsey
       end
     end
+
+    context 'run event!' do
+      it 'define method to run an event' do
+        expect(instance_model).to respond_to(:move!)
+        expect(instance_model).to respond_to(:backward!)
+        expect(instance_model).to respond_to(:jump!)
+      end
+
+      it 'run the method will trigger execution event' do
+        expect{ instance_model.backward! }.to change{ instance_model.current_state}.from(:y).to(:x)
+      end
+
+      it 'if state changed return true' do
+        expect(instance_model.backward!).to be_truthy
+      end
+
+      it 'if state changed return true' do
+        expect{ instance_model.move! }.to raise_error Jsm::IllegalTransitionError, "there is no matching transitions, Cant do event move"
+      end
+    end
   end
 end

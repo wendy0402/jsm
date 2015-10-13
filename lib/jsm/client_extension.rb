@@ -24,6 +24,7 @@ class Jsm::ClientExtension
     state_machine.events.each do |event_name, event|
       define_can_event_method(event_name, event)
       define_event_execution_method(event_name, event)
+      define_event_execution_method!(event_name, event)
     end
   end
 
@@ -37,6 +38,15 @@ class Jsm::ClientExtension
   def define_event_execution_method(event_name, event)
     klass.send(:define_method, "#{event_name}") do
       event.execute(self)
+    end
+  end
+
+  def define_event_execution_method!(event_name, event)
+    klass.send(:define_method, "#{event_name}!") do
+      unless event.execute(self)
+        raise Jsm::IllegalTransitionError, "there is no matching transitions, Cant do event #{event_name}"
+      end
+      true
     end
   end
 end
