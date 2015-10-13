@@ -23,6 +23,10 @@ class Jsm::Event
     @transitions.push(transition)
   end
 
+
+  def execute(object)
+  end
+
   private
 
   def validate_params(params = {})
