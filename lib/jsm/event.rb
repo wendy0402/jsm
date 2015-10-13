@@ -26,6 +26,8 @@ class Jsm::Event
   end
 
 
+  # execute the event, and do a transition
+  # if the object current state match with the from state of a transition
   def execute(object)
     transitions.any? do |transition|
       if transition.from.include?(obj_state(object))
@@ -36,6 +38,7 @@ class Jsm::Event
     end
   end
 
+  # method to check whether this event can be executed
   def can_be_executed?(object)
     from_states = transitions.map(&:from).flatten
     from_states.include?(object.current_state)
