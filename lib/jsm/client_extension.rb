@@ -7,11 +7,11 @@ class Jsm::ClientExtension
     client_extension.define_event_method
   end
 
-  attr_reader :klass, :state_machine
+  attr_reader :klass, :state_machine, :event_executor
   def initialize(klass, params = {})
     @klass = klass
     @state_machine = params[:state_machine]
-
+    @event_executor = Jsm::EventExecutor.new
     if @state_machine.attribute_name.nil?
       raise Jsm::NoAttributeError, "please assign the attribute_name first in class #{@state_machine.name}"
     end
@@ -45,23 +45,23 @@ class Jsm::ClientExtension
 
   private
   def define_can_event_method(event_name, event)
+    executor = event_executor
     klass.send(:define_method, "can_#{event_name}?") do
-      event.can_be_executed?(self)
+      executor.can_be_executed?(event, self)
     end
   end
 
   def define_event_execution_method(event_name, event)
+    executor = event_executor
     klass.send(:define_method, "#{event_name}") do
-      event.execute(self)
+      executor.execute(event, self)
     end
   end
 
   def define_event_execution_method!(event_name, event)
+    executor = event_executor
     klass.send(:define_method, "#{event_name}!") do
-      unless event.execute(self)
-        raise Jsm::IllegalTransitionError, "there is no matching transitions, Cant do event #{event_name}"
-      end
-      true
+      executor.execute!(event, self)
     end
   end
 end

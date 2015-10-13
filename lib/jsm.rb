@@ -6,5 +6,6 @@ require "jsm/machines"
 require "jsm/base"
 require "jsm/client"
 require "jsm/client_extension"
+require "jsm/event_executor"
 module Jsm
 end
