@@ -2,6 +2,7 @@
 
 require "bundler/setup"
 require "jsm"
+Dir[File.expand_path("../../examples/**/*.rb",__FILE__)].each{ |f| require f }
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
