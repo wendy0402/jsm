@@ -43,6 +43,10 @@ class Jsm::Base
   private
 
   def create_custom_event_method
+    if self.class.attribute_name.nil?
+      raise Jsm::NoAttributeError, "please assign the attribute_name first in class #{self.class}"
+    end
+
     self.class.events.each do |name, event|
       @klass.class_eval <<-EOFDEF, __FILE__, __LINE__
         def #{name}

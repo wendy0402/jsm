@@ -67,13 +67,24 @@ describe Jsm::Base do
       end
 
       simple_model.send(:include, Jsm::Client)
-      simple_model.jsm_use state_machine
+    end
+    context 'attribute_name present' do
+      before do
+        state_machine.attribute_name :my_state
+        simple_model.jsm_use state_machine
+      end
+
+      it 'create custom events method for state model' do
+        instance_model = state_machine.new(simple_model)
+        expect(simple_model.new).to be_respond_to(:confirm)
+        expect(simple_model.new).to be_respond_to(:unconfirm)
+      end
     end
 
-    it 'create custom events method for state model' do
-      instance_model = state_machine.new(simple_model)
-      expect(simple_model.new).to be_respond_to(:confirm)
-      expect(simple_model.new).to be_respond_to(:unconfirm)
+    context 'attribute_name is not present' do
+      it 'raise exception when state_machine attribute_name is nil' do
+        expect{ simple_model.jsm_use state_machine }.to raise_error Jsm::NoAttributeError, "please assign the attribute_name first in class #{state_machine}"
+      end
     end
   end
 end
