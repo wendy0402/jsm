@@ -36,6 +36,11 @@ class Jsm::Event
     end
   end
 
+  def can_be_executed?(object)
+    from_states = transitions.map(&:from).flatten
+    from_states.include?(object.current_state)
+  end
+
   private
 
   def obj_state(object)
