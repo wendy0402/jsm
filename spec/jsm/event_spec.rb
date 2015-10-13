@@ -75,4 +75,22 @@ describe Jsm::Event do
       end
     end
   end
+
+  describe '.execute' do
+    let(:event) { Jsm::Event.new(:event_test, states: states) }
+    let(:simple_model) { Class.new { attr_accessor :my_state; def initialize; @my_state = :x; end } }
+    before do
+      event.attribute_name = :my_state
+      states.add_state(:x)
+      states.add_state(:y)
+      states.add_state(:z)
+      event.transition from: [:x, :y], to: :z
+    end
+
+    it "if transition 'from' match, transform object into `to` state" do
+      instance = simple_model.new
+      event.execute(instance)
+      expect(instance.my_state).to eq(:z)
+    end
+  end
 end

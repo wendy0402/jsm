@@ -40,17 +40,23 @@ class Jsm::Base
     create_custom_event_method
   end
 
+  def self.execute(event_name, obj)
+    @events[event_name].execute(obj)
+  end
+
   private
 
   def create_custom_event_method
-    if self.class.attribute_name.nil?
+    state_attribute_name = self.class.attribute_name
+    if state_attribute_name.nil?
       raise Jsm::NoAttributeError, "please assign the attribute_name first in class #{self.class}"
     end
 
     self.class.events.each do |name, event|
+      event.attribute_name = state_attribute_name
       @klass.class_eval <<-EOFDEF, __FILE__, __LINE__
         def #{name}
-          #{event.execute(self)}
+          self.class.state_machine.execute(:#{name}, self)
         end
       EOFDEF
     end

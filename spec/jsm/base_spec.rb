@@ -51,39 +51,45 @@ describe Jsm::Base do
   end
 
   describe '.initialize' do
-    let(:simple_model) { Class.new }
-
-    before do
-      state_machine.state :x#, initial: true
-      state_machine.state :y
-      state_machine.state :z
-
-      state_machine.event :confirm do
-        transition from: :x, to: :y
+    let(:simple_model) {
+      Class.new do
+        attr_accessor :my_state
+        def initialize(val = nil)
+          @my_state = val
+        end
+        def self.state_machine
+          SimpleSM
+        end
       end
+    }
+    let(:state_machine) { SimpleSM }
 
-      state_machine.event :unconfirm do
-        transition from: :y, to: :x
-      end
-
-      simple_model.send(:include, Jsm::Client)
-    end
     context 'attribute_name present' do
-      before do
-        state_machine.attribute_name :my_state
-        simple_model.jsm_use state_machine
-      end
-
       it 'create custom events method for state model' do
         instance_model = state_machine.new(simple_model)
-        expect(simple_model.new).to be_respond_to(:confirm)
-        expect(simple_model.new).to be_respond_to(:unconfirm)
+        expect(simple_model.new).to be_respond_to(:move)
+        expect(simple_model.new).to be_respond_to(:backward)
+      end
+
+      it 'when custom event executed change state' do
+        state_machine.new(simple_model)
+        instance = simple_model.new(:x)
+        expect{ instance.move }.to change{ instance.my_state }.from(:x).to(:y)
       end
     end
 
     context 'attribute_name is not present' do
+      before do
+        @origin_attribute_name = state_machine.attribute_name
+        state_machine.instance_variable_set(:@attribute_name, nil)
+      end
+
+      after do
+        state_machine.attribute_name @origin_attribute_name
+      end
+
       it 'raise exception when state_machine attribute_name is nil' do
-        expect{ simple_model.jsm_use state_machine }.to raise_error Jsm::NoAttributeError, "please assign the attribute_name first in class #{state_machine}"
+        expect{ state_machine.new(simple_model) }.to raise_error Jsm::NoAttributeError, "please assign the attribute_name first in class #{state_machine}"
       end
     end
   end

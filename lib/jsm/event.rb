@@ -2,6 +2,8 @@
 # It do transition process from one state to another state
 class Jsm::Event
   attr_reader :name, :states, :transitions
+  attr_accessor :attribute_name
+
   ::Jsm::Transition = Struct.new(:from, :to)
   def initialize(name, params = {}, &block)
     @name = name
@@ -25,9 +27,24 @@ class Jsm::Event
 
 
   def execute(object)
+    transitions.any? do |transition|
+      if transition.from.include?(obj_state(object))
+        change_state_obj(object, transition.to)
+        return true
+      end
+      false
+    end
   end
 
   private
+
+  def obj_state(object)
+    object.instance_variable_get("@#{attribute_name}".to_sym)
+  end
+
+  def change_state_obj(object, to_state)
+    object.instance_variable_set("@#{attribute_name}", to_state)
+  end
 
   def validate_params(params = {})
     from = params[:from]

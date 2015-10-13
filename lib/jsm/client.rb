@@ -6,15 +6,13 @@ module Jsm::Client
 
   module InstanceMethods
     def state_machine
-      self.class.state_machine
+      self.class.respond_to?(:state_machine) ? self.class.state_machine : nil
     end
 
     def current_state
       attr_state = state_machine.attribute_name
       instance_variable_get("@#{attr_state}".to_sym)
     end
-
-
   end
 
   module ClassMethods
