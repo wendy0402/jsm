@@ -11,6 +11,10 @@ class Jsm::ClientExtension
   def initialize(klass, params = {})
     @klass = klass
     @state_machine = params[:state_machine]
+
+    if @state_machine.attribute_name.nil?
+      raise Jsm::NoAttributeError, "please assign the attribute_name first in class #{@state_machine.name}"
+    end
   end
 
   # define method for all states to check status equal with a states
@@ -32,6 +36,7 @@ class Jsm::ClientExtension
   # * method to run an event and raise error if failed( e.g: married! )
   def define_event_method
     state_machine.events.each do |event_name, event|
+      event.attribute_name = state_machine.attribute_name
       define_can_event_method(event_name, event)
       define_event_execution_method(event_name, event)
       define_event_execution_method!(event_name, event)
