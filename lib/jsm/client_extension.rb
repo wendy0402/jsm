@@ -12,7 +12,7 @@ class Jsm::ClientExtension
     @klass = klass
     @state_machine = params[:state_machine]
     @event_executor = Jsm::EventExecutor.new
-    if @state_machine.attribute_name.nil?
+    unless @state_machine.attribute_name
       raise Jsm::NoAttributeError, "please assign the attribute_name first in class #{@state_machine.name}"
     end
   end

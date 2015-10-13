@@ -13,6 +13,21 @@ describe Jsm::ClientExtension do
     Jsm::ClientExtension.decorate(simple_model, state_machine: SimpleSM)
   end
 
+  describe 'exception NoAttributeError' do
+    before do
+      @origin_attribute_name = SimpleSM.attribute_name
+      SimpleSM.instance_variable_set(:@attribute_name, nil)
+    end
+
+    after do
+      SimpleSM.attribute_name @origin_attribute_name
+    end
+
+    it 'raised when attribute_name empty' do
+      expect{ Jsm::ClientExtension.new(simple_model, state_machine: SimpleSM) }.to raise_error Jsm::NoAttributeError
+    end
+  end
+
   describe 'state' do
     it 'create all states method for the object' do
       expect(instance_model).to respond_to(:x?)
