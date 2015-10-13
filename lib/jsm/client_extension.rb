@@ -22,9 +22,21 @@ class Jsm::ClientExtension
 
   def define_event_method
     state_machine.events.each do |event_name, event|
-      klass.send(:define_method, "can_#{event_name}?") do
-        event.can_be_executed?(self)
-      end
+      define_can_event_method(event_name, event)
+      define_event_execution_method(event_name, event)
+    end
+  end
+
+  private
+  def define_can_event_method(event_name, event)
+    klass.send(:define_method, "can_#{event_name}?") do
+      event.can_be_executed?(self)
+    end
+  end
+
+  def define_event_execution_method(event_name, event)
+    klass.send(:define_method, "#{event_name}") do
+      event.execute(self)
     end
   end
 end
