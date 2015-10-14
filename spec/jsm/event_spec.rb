@@ -1,20 +1,5 @@
 describe Jsm::Event do
-  let(:simple_model) do
-    Class.new do
-      attr_accessor :my_state
-      def initialize
-        @my_state = :x
-      end
-
-      def current_state
-        @my_state
-      end
-
-      def jsm_set_state(val)
-        @my_state = val
-      end
-    end
-  end
+  let(:simple_model) { create_class_simple_model }
 
   let(:states) { Jsm::States.new }
 
@@ -94,8 +79,10 @@ describe Jsm::Event do
 
   describe '.execute' do
     let(:event) { Jsm::Event.new(:event_test, states: states) }
+    let(:instance) { simple_model.new }
 
     before do
+      instance.my_state = :x
       event.attribute_name = :my_state
       states.add_state(:x)
       states.add_state(:y)
@@ -104,7 +91,6 @@ describe Jsm::Event do
     end
 
     it "if transition 'from' match, transform object into `to` state" do
-      instance = simple_model.new
       event.execute(instance)
       expect(instance.my_state).to eq(:z)
     end

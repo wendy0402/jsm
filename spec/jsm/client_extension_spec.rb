@@ -1,16 +1,5 @@
 describe Jsm::ClientExtension do
-  let(:simple_model) do
-    Class.new do
-      attr_accessor :my_state
-      def current_state
-        @my_state
-      end
-
-      def jsm_set_state(val)
-        @my_state = val
-      end
-    end
-  end
+  let(:simple_model) { create_class_simple_model }
 
   let(:instance_model) { simple_model.new }
   before do
