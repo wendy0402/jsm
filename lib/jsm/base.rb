@@ -18,10 +18,6 @@ class Jsm::Base
     @states.list
   end
 
-  # def initial_state
-  #   @states.initial_state
-  # end
-
   def self.event(name, &block)
     @events ||= {}
     if !@events[name].nil?
