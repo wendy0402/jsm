@@ -1,4 +1,24 @@
 describe Jsm::Base do
+  let(:simple_model) do
+    Class.new do
+      attr_accessor :my_state
+      def initialize(val = nil)
+        @my_state = val
+      end
+      def self.state_machine
+        SimpleSM
+      end
+
+      def current_state
+        my_state
+      end
+
+      def jsm_set_state(val)
+        @my_state = val
+      end
+    end
+  end
+
   let(:state_machine) { Class.new(Jsm::Base) }
 
   describe '#state' do
@@ -51,21 +71,6 @@ describe Jsm::Base do
   end
 
   describe '.initialize' do
-    let(:simple_model) {
-      Class.new do
-        attr_accessor :my_state
-        def initialize(val = nil)
-          @my_state = val
-        end
-        def self.state_machine
-          SimpleSM
-        end
-
-        def current_state
-          my_state
-        end
-      end
-    }
     let(:state_machine) { SimpleSM }
 
     context 'attribute_name present' do

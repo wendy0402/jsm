@@ -5,6 +5,10 @@ describe Jsm::ClientExtension do
       def current_state
         @my_state
       end
+
+      def jsm_set_state(val)
+        @my_state = val
+      end
     end
   end
 

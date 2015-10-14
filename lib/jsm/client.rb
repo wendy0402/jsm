@@ -5,6 +5,12 @@ module Jsm::Client
   end
 
   module InstanceMethods
+    def self.included(base)
+      base.class_eval <<-EOFILE, __FILE__, __LINE__
+        private :jsm_set_state
+      EOFILE
+    end
+
     def state_machine
       self.class.respond_to?(:state_machine) ? self.class.state_machine : nil
     end
@@ -12,6 +18,11 @@ module Jsm::Client
     def current_state
       attr_state = state_machine.attribute_name
       instance_variable_get("@#{attr_state}".to_sym)
+    end
+
+    def jsm_set_state(val)
+      attr_state = state_machine.attribute_name
+      instance_variable_set("@#{attr_state}".to_sym, val)
     end
   end
 

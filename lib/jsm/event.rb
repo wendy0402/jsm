@@ -51,7 +51,7 @@ class Jsm::Event
   end
 
   def change_state_obj(object, to_state)
-    object.send("#{attribute_name}=", to_state)
+    object.send("jsm_set_state", to_state)
   end
 
   def validate_params(params = {})
