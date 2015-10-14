@@ -60,6 +60,10 @@ describe Jsm::Base do
         def self.state_machine
           SimpleSM
         end
+
+        def current_state
+          my_state
+        end
       end
     }
     let(:state_machine) { SimpleSM }

@@ -47,11 +47,11 @@ class Jsm::Event
   private
 
   def obj_state(object)
-    object.instance_variable_get("@#{attribute_name}".to_sym)
+    object.current_state
   end
 
   def change_state_obj(object, to_state)
-    object.instance_variable_set("@#{attribute_name}", to_state)
+    object.send("#{attribute_name}=", to_state)
   end
 
   def validate_params(params = {})

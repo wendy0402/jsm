@@ -78,7 +78,19 @@ describe Jsm::Event do
 
   describe '.execute' do
     let(:event) { Jsm::Event.new(:event_test, states: states) }
-    let(:simple_model) { Class.new { attr_accessor :my_state; def initialize; @my_state = :x; end } }
+    let(:simple_model) do
+      Class.new do
+        attr_accessor :my_state
+        def initialize
+          @my_state = :x
+        end
+
+        def current_state
+          @my_state
+        end
+      end
+    end
+
     before do
       event.attribute_name = :my_state
       states.add_state(:x)
