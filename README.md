@@ -36,26 +36,20 @@ class UserStateMachine
   state :intermediate
   state :master
 
-  validation :beginner do
-    validate :registration_validation do |user|
+  validation :beginner do |user|
       user.errors.add(:email_confirmation, 'has not been done yet') if user.confirmation.blank?
       user.errors.add(:address, 'can not be blank') if user.address.blank?
+  end
+
+  validation :intermediate do |user|
+    unless user.current_level == min_level_intermediate
+      user.errors.add(:base, 'Please complete all beginner task')
     end
   end
 
-  validation :intermediate do
-    validate :completion_beginner_level_validation do |base|
-      unless user.current_level == min_level_intermediate
-        user.errors.add(:base, 'Please complete all beginner task')
-      end
-    end
-  end
-
-  validation :master do
-    validates :completion_intermediate_level_validation do |base|
-      unless user.current_level == total_complete_intermediate
-        errors.add(:base, 'Please complete all intermediate task')
-      end
+  validation :master do |user|
+    unless user.current_level == total_complete_intermediate
+      errors.add(:base, 'Please complete all intermediate task')
     end
   end
 
