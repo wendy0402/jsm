@@ -29,13 +29,19 @@ class Jsm::Event
   # execute the event, and do a transition
   # if the object current state match with the from state of a transition
   def execute(object)
-    transitions.any? do |transition|
-      if transition.from.include?(obj_state(object))
-        change_state_obj(object, transition.to)
-        return true
-      end
+    transition = can_be_transitioning_to(object)
+    if transition
+      change_state_obj(object, transition.to)
+      true
+    else
       false
     end
+  end
+
+  # check when running this event, which transitions can change the state of object state
+  # return the transition object
+  def can_be_transitioning_to(object)
+    transitions.find{ |transition| transition.from.include?(obj_state(object)) }
   end
 
   # method to check whether this event can be executed
