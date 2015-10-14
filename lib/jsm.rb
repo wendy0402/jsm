@@ -8,5 +8,6 @@ require "jsm/client"
 require "jsm/client/active_model"
 require "jsm/client_extension"
 require "jsm/event_executor"
+require "jsm/validator"
 module Jsm
 end
