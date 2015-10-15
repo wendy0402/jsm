@@ -46,7 +46,46 @@ describe Jsm::EventExecutor do
           expect(result).to be_truthy
           expect(instance_model.current_state).to eq(:y)
         end
+
+        it 'when no transitions found, event failed' do
+          instance_model.name = 'testMe'
+          instance_model.my_state = :z
+          result = event_executor.execute(event, instance_model)
+          expect(result).to be_falsey
+          expect(instance_model.current_state).to eq(:z)
+        end
       end
+    end
+  end #describe .execute
+
+  describe 'can_be_executed' do
+    let(:validator) do
+      Jsm::Validator.new(:state, :y) do |obj|
+        obj.name == 'testMe'
+      end
+    end
+
+    let(:validators) { Jsm::Validators.new }
+    let(:event_executor) { Jsm::EventExecutor.new(validators: validators) }
+
+    before do
+      validators.add_validator(:y, validator)
+    end
+
+    it 'passed validation and transition is possible' do
+      instance_model.name = 'testMe'
+      expect(event_executor.can_be_executed?(event, instance_model)).to be_truthy
+    end
+
+    it 'validation exists and invalid return false' do
+      instance_model.name = 'testMe2'
+      expect(event_executor.can_be_executed?(event, instance_model)).to be_falsey
+    end
+
+    it 'transition not found, return false' do
+      instance_model.name = 'testMe'
+      instance_model.my_state = :y
+      expect(event_executor.can_be_executed?(event, instance_model)).to be_falsey
     end
   end
 end
