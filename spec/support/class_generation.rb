@@ -1,7 +1,7 @@
 module ClassGeneration
   def create_class_simple_model
     Class.new do
-      attr_accessor :my_state, :name
+      attr_accessor :my_state, :name, :age
       def initialize(val = nil)
         @my_state = val
       end
@@ -18,5 +18,9 @@ module ClassGeneration
       end
     end #class
   end #def
+
+  def create_class_active_model
+    create_class_simple_model.send(:include, ActiveModel::Model)
+  end
 
 end
