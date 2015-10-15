@@ -1,6 +1,6 @@
 # this class is the base for adapter
 # it can be extended for ActiveRecord adapter
-class Jsm::EventExecutor
+class Jsm::EventExecutor::Base
   attr_reader :validators
   def initialize(params = {})
     @validators = params[:validators]
