@@ -95,4 +95,32 @@ describe Jsm::Event do
       expect(instance.my_state).to eq(:z)
     end
   end
+
+  describe '.can_be_transitioning_to' do
+    let(:event) { Jsm::Event.new(:event_test, states: states) }
+    let(:instance) { simple_model.new }
+
+    before do
+      instance.my_state = :x
+      event.attribute_name = :my_state
+      states.add_state(:x)
+      states.add_state(:y)
+      states.add_state(:z)
+      event.transition from: [:x, :y], to: :z
+      event.transition from: [:y], to: :x
+    end
+
+    it "return transition that can be executed" do
+      result = event.can_be_transitioning_to(instance)
+      expect(result.to).to eq(:z)
+      expect(result.from).to eq([:x, :y])
+    end
+
+    it 'return the first transition that match' do
+      instance.my_state = :y
+      result = event.can_be_transitioning_to(instance)
+      expect(result.to).to eq(:z)
+      expect(result.from).to eq([:x, :y])
+    end
+  end
 end
