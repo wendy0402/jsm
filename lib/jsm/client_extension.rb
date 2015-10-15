@@ -11,7 +11,7 @@ class Jsm::ClientExtension
   def initialize(klass, params = {})
     @klass = klass
     @state_machine = params[:state_machine]
-    @event_executor = Jsm::EventExecutor::Base.new(validators: @state_machine.validators)
+    @event_executor = klass.jsm_event_executor.new(validators: @state_machine.validators)
     unless @state_machine.attribute_name
       raise Jsm::NoAttributeError, "please assign the attribute_name first in class #{@state_machine.name}"
     end

@@ -35,5 +35,9 @@ module Jsm::Client
       EODEF
       Jsm::Machines.add_machines(self, state_machine.new(self))
     end
+
+    def jsm_event_executor
+      Jsm::EventExecutor::Base
+    end
   end
 end

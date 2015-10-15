@@ -6,6 +6,19 @@ describe Jsm::ClientExtension do
     Jsm::ClientExtension.decorate(simple_model, state_machine: SimpleSM)
   end
 
+  describe 'initialize' do
+    it 'validators use event executor base class by default' do
+      client_extension = Jsm::ClientExtension.new(simple_model, state_machine: SimpleSM)
+      expect(client_extension.event_executor.class).to eq(Jsm::EventExecutor::Base)
+    end
+
+    it 'validators use event executor ActiveModel class if use client ActiveModel' do
+      simple_model = create_class_active_model
+      client_extension = Jsm::ClientExtension.new(simple_model, state_machine: SimpleSM)
+      expect(client_extension.event_executor.class).to eq(Jsm::EventExecutor::ActiveModel)
+    end
+  end
+
   describe 'exception NoAttributeError' do
     before do
       @origin_attribute_name = SimpleSM.attribute_name
