@@ -11,12 +11,37 @@ describe Jsm::Base do
   end
 
   describe '#validate' do
-    it 'add new validator' do
+    before do
       state_machine.validate :x do |model|
-        !model.my_state.nil?
+        model.name  == 'testMe'
+      end
+      state_machine.state :x
+      state_machine.state :y
+      state_machine.event :backward do
+        transition from: :y, to: :x
       end
 
+      state_machine.attribute_name :my_state
+      state_machine.new(simple_model)
+    end
+    it 'add new validator' do
       expect(state_machine.validators[:x].size).to eq(1)
+    end
+
+    it 'when do transition it run the validation' do
+      instance_model = simple_model.new
+      instance_model.my_state = :y
+      instance_model.name = 'testMe2'
+      expect(instance_model.backward).to be_falsey
+      expect(instance_model.current_state).to eq(:y)
+    end
+
+    it 'when validation pass run transition' do
+      instance_model = simple_model.new
+      instance_model.my_state = :y
+      instance_model.name = 'testMe'
+      expect(instance_model.backward).to be_truthy
+      expect(instance_model.current_state).to eq(:x)
     end
   end
 
