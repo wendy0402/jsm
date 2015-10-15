@@ -16,7 +16,7 @@ describe Jsm::Base do
         !model.my_state.nil?
       end
 
-      expect(state_machine.validators.size).to eq(1)
+      expect(state_machine.validators[:x].size).to eq(1)
     end
   end
 

@@ -32,8 +32,8 @@ class Jsm::Base
   end
 
   def self.validate(state_name, &block)
-    @validators ||= Hash.new {|validators, state| validators[state] = []}
-    @validators[state_name].push(Jsm::Validator.new(:state, state_name, &block))
+    @validators ||= Jsm::Validators.new
+    @validators.add_validator(state_name, Jsm::Validator.new(:state, state_name, &block))
   end
 
   def self.validators
