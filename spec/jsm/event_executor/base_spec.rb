@@ -3,6 +3,7 @@ describe Jsm::EventExecutor::Base do
   let(:instance_model) { simple_model.new }
   let(:states) { Jsm::States.new }
   let(:event) { Jsm::Event.new(:action, states: states) }
+  let(:validators) { Jsm::Validators.new }
 
   before do
     instance_model.my_state = :x
@@ -12,8 +13,8 @@ describe Jsm::EventExecutor::Base do
   end
 
   describe '.execute' do
-    context 'no validation' do
-      let(:event_executor) { Jsm::EventExecutor::Base.new }
+    context 'validation empty' do
+      let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
 
       it 'change state if transition can be done' do
         event_executor.execute(event, instance_model)
@@ -27,7 +28,6 @@ describe Jsm::EventExecutor::Base do
           end
         end
 
-        let(:validators) { Jsm::Validators.new }
         let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
 
         before do
@@ -65,7 +65,6 @@ describe Jsm::EventExecutor::Base do
       end
     end
 
-    let(:validators) { Jsm::Validators.new }
     let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
 
     before do
@@ -90,7 +89,7 @@ describe Jsm::EventExecutor::Base do
   end
 
   describe 'executed!' do
-    let(:event_executor) { Jsm::EventExecutor::Base.new }
+    let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
 
     it 'if transition change current state' do
       result = event_executor.execute(event, instance_model)
