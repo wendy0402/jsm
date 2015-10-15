@@ -31,6 +31,15 @@ class Jsm::Base
     @events
   end
 
+  def self.validate(state_name, &block)
+    @validators ||= Hash.new {|validators, state| validators[state] = []}
+    @validators[state_name].push(Jsm::Validator.new(:state, state_name, &block))
+  end
+
+  def self.validators
+    @validators
+  end
+
   def initialize(klass)
     @klass = klass
     Jsm::ClientExtension.decorate(@klass, state_machine: self.class)

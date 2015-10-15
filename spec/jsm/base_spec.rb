@@ -8,18 +8,16 @@ describe Jsm::Base do
       state_machine.state :x
       expect(state_machine.states.map(&:name)).to match_array([:x])
     end
+  end
 
-    # it 'can add new initial state' do
-    #   state_machine.state :x, initial: true
-    #   expect(state_machine.initial_state.name).to eq(:x)
-    # end
-    #
-    # it 'can add many states with 1 initial state' do
-    #   state_machine.state :x, initial: true
-    #   state_machine.state :y
-    #   expect(state_machine.initial_state.name).to eq(:x)
-    #   expect(state_machine.states.map(&:name)).to match_array([:x, :y])
-    # end
+  describe '#validate' do
+    it 'add new validator' do
+      state_machine.validate :x do |model|
+        !model.my_state.nil?
+      end
+
+      expect(state_machine.validators.size).to eq(1)
+    end
   end
 
   describe '#event' do
