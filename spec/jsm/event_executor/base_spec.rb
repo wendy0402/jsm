@@ -20,40 +20,40 @@ describe Jsm::EventExecutor::Base do
         event_executor.execute(event, instance_model)
         expect(instance_model.current_state).to eq(:y)
       end
+    end
 
-      context 'with validation' do
-        let(:validator) do
-          Jsm::Validator.new(:state, :y) do |obj|
-            obj.name == 'testMe'
-          end
+    context 'with validation' do
+      let(:validator) do
+        Jsm::Validator.new(:state, :y) do |obj|
+          obj.name == 'testMe'
         end
+      end
 
-        let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
+      let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
 
-        before do
-          validators.add_validator(:y, validator)
-        end
+      before do
+        validators.add_validator(:y, validator)
+      end
 
-        it 'if not valid, then dont do transition eventhough possible' do
-          result = event_executor.execute(event, instance_model)
-          expect(result).to be_falsey
-          expect(instance_model.current_state).to eq(:x)
-        end
+      it 'if not valid, then dont do transition eventhough possible' do
+        result = event_executor.execute(event, instance_model)
+        expect(result).to be_falsey
+        expect(instance_model.current_state).to eq(:x)
+      end
 
-        it 'if valid, do transition' do
-          instance_model.name = 'testMe'
-          result = event_executor.execute(event, instance_model)
-          expect(result).to be_truthy
-          expect(instance_model.current_state).to eq(:y)
-        end
+      it 'if valid, do transition' do
+        instance_model.name = 'testMe'
+        result = event_executor.execute(event, instance_model)
+        expect(result).to be_truthy
+        expect(instance_model.current_state).to eq(:y)
+      end
 
-        it 'when no transitions found, event failed' do
-          instance_model.name = 'testMe'
-          instance_model.my_state = :z
-          result = event_executor.execute(event, instance_model)
-          expect(result).to be_falsey
-          expect(instance_model.current_state).to eq(:z)
-        end
+      it 'when no transitions found, event failed' do
+        instance_model.name = 'testMe'
+        instance_model.my_state = :z
+        result = event_executor.execute(event, instance_model)
+        expect(result).to be_falsey
+        expect(instance_model.current_state).to eq(:z)
       end
     end
   end #describe .execute
