@@ -89,10 +89,6 @@ describe Jsm::ClientExtension do
       it 'if state changed return true' do
         expect(instance_model.backward!).to be_truthy
       end
-
-      it 'if state changed return true' do
-        expect{ instance_model.move! }.to raise_error Jsm::IllegalTransitionError, "there is no matching transitions, Cant do event move"
-      end
     end
   end
 end
