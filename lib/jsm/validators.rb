@@ -12,6 +12,6 @@ class Jsm::Validators
   end
 
   def validate(name, obj)
-    @list[name].all { |validator| validator.validate(obj) }
+    @list[name].all? { |validator| validator.validate(obj) }
   end
 end
