@@ -89,8 +89,8 @@ class UserStateMachine < Jsm::Base
   validation :intermediate do |user|
     (20..50).include?(user.current_level)
   end
-end
 # many codes here
+end
 ```
 
 ### Event
@@ -151,7 +151,7 @@ class UserStateMachine < Jsm::Base
 
   validation :master do |user|
     unless user.current_level > 50
-     errors.add(:title, 'have not reached 50')
+     user.errors.add(:title, 'have not reached 50')
     end
   end
 
