@@ -15,11 +15,13 @@ module Jsm::Client
       self.class.respond_to?(:state_machine) ? self.class.state_machine : nil
     end
 
+    # able to get current state from here instead check from the targeted attribute
     def current_state
       attr_state = state_machine.attribute_name
       instance_variable_get("@#{attr_state}".to_sym)
     end
 
+    # used for set new state by JSM
     def jsm_set_state(val)
       attr_state = state_machine.attribute_name
       instance_variable_set("@#{attr_state}".to_sym, val)
@@ -36,6 +38,7 @@ module Jsm::Client
       Jsm::Machines.add_machines(self, state_machine.new(self))
     end
 
+    #define type of event executor to be used
     def jsm_event_executor
       Jsm::EventExecutor::Base
     end

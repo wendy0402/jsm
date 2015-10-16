@@ -36,11 +36,11 @@ class UserStateMachine < Jsm::Base
   state :intermediate
   state :master
 
-  validation :intermediate do |user|
+  validate :intermediate do |user|
 	  (20..50).include?(user.current_level)
   end
 
-  validation :master do |user|
+  validate :master do |user|
 	  user.current_level > 50
   end
 
@@ -86,7 +86,7 @@ This is useful, when you want to allow transition to a specified state allowed w
 ``` ruby
 class UserStateMachine < Jsm::Base
 # many codes here
-  validation :intermediate do |user|
+  validate :intermediate do |user|
     (20..50).include?(user.current_level)
   end
 # many codes here
@@ -94,7 +94,7 @@ end
 ```
 
 ### Event
-when an event is triggered, it run `validation`. If passed, then it run `transition`. In the event of having multiple transitions, the first transition that successfully completes will stop other transitions to be executed.
+when an event is triggered, it run `validate`. If passed, then it run `transition`. In the event of having multiple transitions, the first transition that successfully completes will stop other transitions to be executed.
 ```ruby
 class UserStateMachine < Jsm::Base
   attribute_name :level
@@ -143,13 +143,13 @@ class UserStateMachine < Jsm::Base
   state :intermediate
   state :master
 
-  validation :intermediate do |user|
+  validate :intermediate do |user|
     unless (20..50).include?(user.current_level)
       user.errors.add(:title, 'is not between 20 and 50')
     end
   end
 
-  validation :master do |user|
+  validate :master do |user|
     unless user.current_level > 50
      user.errors.add(:title, 'have not reached 50')
     end
@@ -204,13 +204,13 @@ class UserStateMachine < Jsm::Base
   state :intermediate
   state :master
 
-  validation :intermediate do |user|
+  validate :intermediate do |user|
     unless (20..50).include?(user.current_level)
       user.errors.add(:title, 'is not between 20 and 50')
     end
   end
 
-  validation :master do |user|
+  validate :master do |user|
     unless user.current_level > 50
      errors.add(:title, 'have not reached 50')
     end

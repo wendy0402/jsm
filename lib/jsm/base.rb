@@ -1,6 +1,8 @@
 # this module used as extension for state machine class
 # The DSL is built to define the state, event, and transition that happen
 class Jsm::Base
+
+  # define attribute name of state attribute in the client class
   def self.attribute_name(attribute_name = nil)
     if attribute_name.nil?
       @attribute_name
@@ -9,15 +11,25 @@ class Jsm::Base
     end
   end
 
+  # add new state to class
+  # example
+  # state :x
+  # state :y
   def self.state(name, params = {})
     @states ||= Jsm::States.new
     @states.add_state(name, initial: params[:initial])
   end
 
+  # list of all states
   def self.states
     @states.list
   end
 
+  # add new event to the class and add its transition
+  # example:
+  # event :do_this do
+  # transition from: :x, to: :y
+  # transition from: [:j, :g], to: :z
   def self.event(name, &block)
     @events ||= {}
     if !@events[name].nil?
@@ -27,15 +39,23 @@ class Jsm::Base
     @events[name] = Jsm::Event.new(name, states: @states, &block)
   end
 
+  # get list of all events
   def self.events
     @events
   end
 
+  # add validation of a state(when changes to the targeted state, check whether passed this validation or not)
+  # example:
+  # state :y
+  # validate :y do |obj|
+  #   obj.name == 'testMe'
+  # end
   def self.validate(state_name, &block)
     @validators ||= Jsm::Validators.new
     @validators.add_validator(state_name, Jsm::Validator.new(:state, state_name, &block))
   end
 
+  # list all validators that exist
   def self.validators
     @validators
   end
