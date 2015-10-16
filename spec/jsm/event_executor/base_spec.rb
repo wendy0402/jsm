@@ -99,7 +99,7 @@ describe Jsm::EventExecutor::Base do
 
     it 'if transition failed return error' do
       instance_model.my_state = :z
-      expect{ event_executor.execute!(event, instance_model) }.to raise_error Jsm::IllegalTransitionError, "there is no matching transitions, Cant do event action"
+      expect{ event_executor.execute!(event, instance_model) }.to raise_error Jsm::IllegalTransitionError, "there is no matching transitions or invalid, Cant do event action"
       expect(instance_model.current_state).to eq(:z)
     end
   end

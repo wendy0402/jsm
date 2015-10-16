@@ -21,8 +21,8 @@ class Jsm::EventExecutor::Base
 
   # same with execute, but if its failed raise error
   def execute!(event, obj)
-    unless event.execute(obj)
-      raise Jsm::IllegalTransitionError, "there is no matching transitions, Cant do event #{event.name}"
+    unless execute(event, obj)
+      raise Jsm::IllegalTransitionError, "there is no matching transitions or invalid, Cant do event #{event.name}"
     end
     true
   end
