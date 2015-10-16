@@ -186,7 +186,7 @@ end
 `Jsm`  support `ActiveModel`. In the `client` class include the `Jsm::Client::ActiveModel`.  when run an event. It will auto saved the object.
 
 ### Validation
-It also support validation from `ActiveModel` . Validation checked based on `errors` value in the `instance`
+It also support validation from `ActiveModel` . Validation checked based on `errors` value in the `instance`. you can add an error to the errors object. This will prevent the state from being changed
 ```
 user = User.new
 user.level # 1
