@@ -26,7 +26,7 @@ class UserStateMachine < Jsm::Base
 end
 
 
-class User
+class UserBasic
   include Jsm::Client
   jsm_use UserStateMachine
 
