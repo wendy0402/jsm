@@ -1,7 +1,7 @@
 class UserStateMachine < Jsm::Base
   attribute_name :relationship
 
-  state :single
+  state :single, initial: true
   state :in_relationship
   state :married
   state :divorced
@@ -31,4 +31,7 @@ class UserBasic
   jsm_use UserStateMachine
 
   attr_accessor :relationship
+  def initialize(relationship = nil)
+    @relationship = relationship
+  end
 end
