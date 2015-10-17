@@ -1,3 +1,4 @@
+[![Gem Version](https://badge.fury.io/rb/jsm.svg)](https://badge.fury.io/rb/jsm)
 # Jsm
 
 JSM is abbreviation of Just State Machine. The purpose is to simplify and increase the clarity of code related with state. JSM support validations before do transition. It help you to prevent unwanted transition. It also support integration with `ActiveModel` and `ActiveRecord`.
