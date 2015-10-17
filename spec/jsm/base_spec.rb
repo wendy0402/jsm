@@ -12,11 +12,12 @@ describe Jsm::Base do
 
   describe '#validate' do
     before do
+      state_machine.state :x
+      state_machine.state :y
+
       state_machine.validate :x do |model|
         model.name  == 'testMe'
       end
-      state_machine.state :x
-      state_machine.state :y
       state_machine.event :backward do
         transition from: :y, to: :x
       end
@@ -42,6 +43,10 @@ describe Jsm::Base do
       instance_model.name = 'testMe'
       expect(instance_model.backward).to be_truthy
       expect(instance_model.current_state).to eq(:x)
+    end
+
+    it 'raise error when validate state which is not exists in states list' do
+      expect { state_machine.validate :j do |model|; end }.to raise_error Jsm::InvalidStateError, "there is no state y"
     end
   end
 

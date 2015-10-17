@@ -84,9 +84,12 @@ user.can_downgrade_title?
 
 ### Validation
 This is useful, when you want to allow transition to a specified state allowed when it pass the validation. Validation should return true if passed validation and false if failed.
+**note**: Dont forget to define the state first, because if not then Jsm will raise error `Jsm::InvalidStateError`. This is to prevent typo when add new validation
 ``` ruby
 class UserStateMachine < Jsm::Base
 # many codes here
+
+  state :intermediate
   validate :intermediate do |user|
     (20..50).include?(user.current_level)
   end

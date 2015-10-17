@@ -51,6 +51,10 @@ class Jsm::Base
   #   obj.name == 'testMe'
   # end
   def self.validate(state_name, &block)
+    unless @states.has_state?(state_name)
+      raise Jsm::InvalidStateError, "there is no state y"
+    end
+
     @validators ||= Jsm::Validators.new
     @validators.add_validator(state_name, Jsm::Validator.new(:state, state_name, &block))
   end
