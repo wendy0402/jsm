@@ -38,6 +38,19 @@ module Jsm::Client
       Jsm::Machines.add_machines(self, state_machine.new(self))
     end
 
+    # override method new
+    # it is used for set the instance state attribute with initial_state
+    # if initial_state present & instance state attribute is nil
+    def new(*args, &block)
+      obj = super
+      initial_state = self.state_machine.initial_state
+
+      if initial_state && !obj.current_state
+        obj.send(:jsm_set_state, initial_state.name)
+      end
+      obj
+    end
+
     #define type of event executor to be used
     def jsm_event_executor
       Jsm::EventExecutor::Base

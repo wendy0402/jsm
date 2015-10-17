@@ -82,7 +82,38 @@ user.downgrade_title
 user.downgrade_title!
 user.can_downgrade_title?
 ```
+### State
+Define your state **before** define others(validation, event, etc). It is to prevent you define transition, validation for unwanted state.
+You can also define the `initial state`. Initial State is state value that is given when you don't set any value to state attribute in the instance on initialization. Initial State is optional.
 
+```ruby
+class UserStateMachine < Jsm::Base
+  attribute_name :title
+
+  state :beginner, initial: true
+  state :intermediate
+  state :master
+# more code here
+end
+
+class User
+  include Jsm::Client
+  jsm_use UserStateMachine
+
+  attr_accessor :title
+  #your code here
+
+  def initialize(title = nil)
+    @title = title
+  end
+end
+
+user = User.new
+user.current_state # :beginner
+
+user = User.new(:intermediate)
+user.current_state # :intermediate
+```
 ### Validation
 This is useful, when you want to allow transition to a specified state allowed when it pass the validation. Validation should return true if passed validation and false if failed.
 **note**: Dont forget to define the state first, because if not then Jsm will raise error `Jsm::InvalidStateError`. This is to prevent typo when add new validation

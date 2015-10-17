@@ -10,6 +10,17 @@ describe Jsm::Base do
     end
   end
 
+  describe '#initial_state' do
+    it 'show initial state' do
+      state_machine.state :x, initial: true
+      expect(state_machine.initial_state.name).to eq(:x)
+    end
+
+    it 'return nil if there is no initial_state' do
+      expect(state_machine.initial_state).to be_nil
+    end
+  end
+
   describe '#validate' do
     before do
       state_machine.state :x

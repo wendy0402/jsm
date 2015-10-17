@@ -15,6 +15,10 @@ class Jsm::Base
   # example
   # state :x
   # state :y
+  # if put params initial true
+  # it will be treated as initial_state
+  # example:
+  # state :x, initial: true
   def self.state(name, params = {})
     @states ||= Jsm::States.new
     @states.add_state(name, initial: params[:initial])
@@ -23,6 +27,14 @@ class Jsm::Base
   # list of all states
   def self.states
     @states.list
+  end
+
+  # return initial_state
+  # if empty return nil
+  def self.initial_state
+    if @states
+     @states.initial_state
+   end
   end
 
   # add new event to the class and add its transition

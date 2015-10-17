@@ -9,14 +9,25 @@ class Jsm::States
 
   # register new state into the list
   # @param state_name
+  # @param params: allowed params is `initial`(boolean value, default is false)
   def add_state(state_name, params = {})
     initial = params.fetch(:initial) { false }
     if !state_unique?(state_name)
       raise Jsm::NotUniqueStateError, "state #{state_name} has been defined"
     end
 
+    if initial && !initial_state.nil?
+      raise Jsm::InvalidStateError,"can not set initial state to #{state_name}. current initial state is #{initial_state.name}"
+    end
+
     state = create_state(state_name, initial)
     list.push(state)
+
+    @initial_state = state if state.initial
+  end
+
+  def initial_state
+    @initial_state
   end
 
   def has_state?(state_name)
