@@ -4,12 +4,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'jsm/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "jsm"
+  spec.name          = "just_state_machine"
   spec.version       = Jsm::VERSION
   spec.authors       = ["wendy0402"]
   spec.email         = ["wendykurniawan92@gmail.com"]
 
-  spec.summary       = "Just State Machine, State Machine That support custom validations"
+  spec.summary       = "Just State Machine, State Machine That support custom validations, it also known with Jsm"
   spec.description   = "Just StateMachine"
   spec.homepage      = "https://github.com/wendy0402/jsm"
   spec.license       = "MIT"
