@@ -235,7 +235,6 @@ user.errors[:title] # ["is not between 20 and 50"]
 class UserStateMachine < Jsm::Base
   attribute_name :title
 
-  state :unconfirmed
   state :beginner
   state :intermediate
   state :master
@@ -248,7 +247,7 @@ class UserStateMachine < Jsm::Base
 
   validate :master do |user|
     unless user.current_level > 50
-     errors.add(:title, 'have not reached 50')
+     user.errors.add(:title, 'have not reached 50')
     end
   end
 
