@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/jsm.svg)](https://badge.fury.io/rb/jsm)
+[![Gem Version](https://badge.fury.io/rb/just_state_machine.svg)](https://badge.fury.io/rb/just_state_machine)
 [![Code Climate](https://codeclimate.com/github/wendy0402/jsm/badges/gpa.svg)](https://codeclimate.com/github/wendy0402/jsm)
 # Jsm
 
@@ -9,7 +9,7 @@ JSM is abbreviation of Just State Machine. The purpose is to simplify and increa
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'jsm'
+gem 'just_state_machine'
 ```
 
 And then execute:
@@ -18,7 +18,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install jsm
+    $ gem install just_state_machine
 
 ## Usage
 
@@ -168,7 +168,15 @@ user.title # :beginner
 user.upgrade_title # true
 user.title # :intermediate
 ```
+### Transition
+Transition will transitioning your state from one state to other state. Params `from` in transition can receive one or multiple states.
+However to put multiple states, you need to put it in array.
 
+```ruby
+transition from: :intermediate, to: :beginner #one `from` states
+transition from: [:intermediate, :master], to: :beginner #multiple `from` states
+```
+What above code means for multiple `from` states is the current state either `:intermediate` or `:master`, transform it into `:beginner` state
 ## Active Model Integration
 ```ruby
 class UserStateMachine < Jsm::Base
