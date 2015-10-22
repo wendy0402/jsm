@@ -4,7 +4,12 @@ class Jsm::Event
   attr_reader :name, :states, :transitions
   attr_accessor :attribute_name
 
-  ::Jsm::Transition = Struct.new(:from, :to)
+  ::Jsm::Transition = Struct.new(:from, :to) do
+    def multiple_from?
+      from.size > 1
+    end
+  end
+
   def initialize(name, params = {}, &block)
     @name = name
     @states = params[:states]

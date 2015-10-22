@@ -17,4 +17,9 @@ module Jsm
     require "jsm/event_executor/active_model"
     require "jsm/event_executor/active_record"
   end
+
+  module Drawer
+    require "jsm/drawer/node"
+    require "jsm/drawer/diagraph"
+  end
 end
