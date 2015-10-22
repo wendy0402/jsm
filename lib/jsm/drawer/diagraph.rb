@@ -1,5 +1,5 @@
 #list of all nodes
-class Jsm::Drawer::Diagraph
+class Jsm::Drawer::Digraph
   attr_reader :state_machine
   def initialize(state_machine)
     @state_machine = state_machine

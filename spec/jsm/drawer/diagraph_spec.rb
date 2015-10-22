@@ -1,4 +1,4 @@
-describe Jsm::Drawer::Diagraph do
+describe Jsm::Drawer::Digraph do
   class JsmDrawerStateMachine < Jsm::Base
     state :draft
     state :confirmed
@@ -29,7 +29,7 @@ describe Jsm::Drawer::Diagraph do
     end
   end
 
-  let(:diagram) { Jsm::Drawer::Diagraph.new(JsmDrawerStateMachine) }
+  let(:diagram) { Jsm::Drawer::Digraph.new(JsmDrawerStateMachine) }
   let(:diagraph) { diagram.nodes }
 
   describe '.nodes' do
