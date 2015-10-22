@@ -21,5 +21,6 @@ module Jsm
   module Drawer
     require "jsm/drawer/node"
     require "jsm/drawer/digraph"
+    require "jsm/drawer/graphviz"
   end
 end
