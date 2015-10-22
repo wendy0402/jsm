@@ -20,6 +20,6 @@ module Jsm
 
   module Drawer
     require "jsm/drawer/node"
-    require "jsm/drawer/diagraph"
+    require "jsm/drawer/digraph"
   end
 end
