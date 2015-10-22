@@ -1,5 +1,6 @@
 describe Jsm::Drawer::Digraph do
   class JsmDrawerStateMachine < Jsm::Base
+    attribute_name :test
     state :draft
     state :confirmed
     state :delayed
