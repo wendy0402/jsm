@@ -17,4 +17,11 @@ module Jsm
     require "jsm/event_executor/active_model"
     require "jsm/event_executor/active_record"
   end
+
+  require "jsm/callbacks"
+  module Callbacks
+    require 'jsm/callbacks/callback'
+    require "jsm/callbacks/chain"
+    require "jsm/callbacks/chain_collection"
+  end
 end
