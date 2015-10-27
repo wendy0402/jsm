@@ -1,3 +1,4 @@
+# collection of chain
 class Jsm::Callbacks::ChainCollection
   def initialize(klass)
     @klass = klass
