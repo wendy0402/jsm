@@ -4,7 +4,8 @@ describe Jsm::EventExecutor::Base do
   let(:states) { Jsm::States.new }
   let(:event) { Jsm::Event.new(:action, states: states) }
   let(:validators) { Jsm::Validators.new }
-
+  let(:callbacks) { Jsm::Callbacks::ChainCollection.new(simple_model) }
+  let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
   before do
     instance_model.my_state = :x
     states.add_state(:x)
@@ -14,8 +15,6 @@ describe Jsm::EventExecutor::Base do
 
   describe '.execute' do
     context 'validation empty' do
-      let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
-
       it 'change state if transition can be done' do
         event_executor.execute(event, instance_model)
         expect(instance_model.current_state).to eq(:y)
@@ -28,8 +27,6 @@ describe Jsm::EventExecutor::Base do
           obj.name == 'testMe'
         end
       end
-
-      let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
 
       before do
         validators.add_validator(:y, validator)
@@ -65,8 +62,6 @@ describe Jsm::EventExecutor::Base do
       end
     end
 
-    let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
-
     before do
       validators.add_validator(:y, validator)
     end
@@ -89,8 +84,6 @@ describe Jsm::EventExecutor::Base do
   end
 
   describe 'executed!' do
-    let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
-
     it 'if transition change current state' do
       result = event_executor.execute(event, instance_model)
       expect(result).to be_truthy
