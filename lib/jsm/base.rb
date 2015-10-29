@@ -1,7 +1,7 @@
 # this module used as extension for state machine class
 # The DSL is built to define the state, event, and transition that happen
 class Jsm::Base
-
+  include Jsm::Callbacks
   # define attribute name of state attribute in the client class
   def self.attribute_name(attribute_name = nil)
     if attribute_name.nil?
@@ -67,13 +67,18 @@ class Jsm::Base
       raise Jsm::InvalidStateError, "there is no state y"
     end
 
-    @validators ||= Jsm::Validators.new
-    @validators.add_validator(state_name, Jsm::Validator.new(:state, state_name, &block))
+    validators.add_validator(state_name, Jsm::Validator.new(:state, state_name, &block))
   end
 
   # list all validators that exist
   def self.validators
-    @validators
+    @validators ||= Jsm::Validators.new
+  end
+  # set a before callback for an event
+  def self.pre_before(event_name, &block)
+    if !events[event_name]
+      raise Jsm::InvalidEventError, "event #{event_name} has not been registered"
+    end
   end
 
   def initialize(klass)
