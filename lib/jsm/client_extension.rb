@@ -8,6 +8,7 @@ class Jsm::ClientExtension
   end
 
   attr_reader :klass, :state_machine, :event_executor
+  # @param options with options state_machine. It contain state_machine class( class inherited from Jsm::Base)
   def initialize(klass, params = {})
     @klass = klass
     @state_machine = params[:state_machine]
