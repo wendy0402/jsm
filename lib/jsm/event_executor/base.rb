@@ -11,6 +11,7 @@ class Jsm::EventExecutor::Base
   # it execute event for the object.
   # If transition failed or invalid by validation toward the object,
   # then it will return false
+  # it also run callbacks of the event
   def execute(event, obj)
     state_machine.run_callback event.name, obj do |obj|
       execute_action(event, obj)
@@ -24,6 +25,8 @@ class Jsm::EventExecutor::Base
   end
 
   # same with execute, but if its failed raise error
+  # it also run callbacks of the event
+  # however after callbacks only run when success because if its failed will raise error
   def execute!(event, obj)
     state_machine.run_callback event.name, obj do |obj|
       unless execute_action(event, obj)
