@@ -64,6 +64,25 @@ describe Jsm::EventExecutor::ActiveModel do
         expect(instance_model.errors[:my_state]).to include('no transitions match')
       end
     end
+
+    context 'callback' do
+      before do
+        simple_sm.before :action do |obj|
+          obj.name = 'before'
+        end
+
+        simple_sm.after :action do |result, obj|
+          obj.name += ' after'
+        end
+      end
+
+      it 'run callback when execute event' do
+        result = event_executor.execute(event, instance_model)
+        expect(result).to be_truthy
+        expect(instance_model.name).to eq('before after')
+        expect(instance_model.my_state).to eq(:y)
+      end
+    end
   end
 
   describe 'can_be_executed' do
