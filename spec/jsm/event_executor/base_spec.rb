@@ -1,16 +1,21 @@
 describe Jsm::EventExecutor::Base do
   let(:simple_model) { create_class_simple_model }
   let(:instance_model) { simple_model.new }
-  let(:states) { Jsm::States.new }
-  let(:event) { Jsm::Event.new(:action, states: states) }
-  let(:validators) { Jsm::Validators.new }
-  let(:callbacks) { Jsm::Callbacks::ChainCollection.new(simple_model) }
-  let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
+  let(:event_executor) { Jsm::EventExecutor::Base.new(state_machine: simple_sm) }
+  let(:simple_sm) do
+    Class.new(Jsm::Base) do
+      attribute_name :my_state
+      state :x
+      state :y
+      event :action do
+        transition from: :x, to: :y
+      end
+    end #class
+  end
+  let(:event) { simple_sm.events[:action] }
+
   before do
     instance_model.my_state = :x
-    states.add_state(:x)
-    states.add_state(:y)
-    event.transition from: :x, to: :y
   end
 
   describe '.execute' do
@@ -22,14 +27,10 @@ describe Jsm::EventExecutor::Base do
     end
 
     context 'with validation' do
-      let(:validator) do
-        Jsm::Validator.new(:state, :y) do |obj|
+      before do
+        simple_sm.validate :y do |obj|
           obj.name == 'testMe'
         end
-      end
-
-      before do
-        validators.add_validator(:y, validator)
       end
 
       it 'if not valid, then dont do transition eventhough possible' do
@@ -56,14 +57,10 @@ describe Jsm::EventExecutor::Base do
   end #describe .execute
 
   describe 'can_be_executed' do
-    let(:validator) do
-      Jsm::Validator.new(:state, :y) do |obj|
+    before do
+      simple_sm.validate :y do |obj|
         obj.name == 'testMe'
       end
-    end
-
-    before do
-      validators.add_validator(:y, validator)
     end
 
     it 'passed validation and transition is possible' do

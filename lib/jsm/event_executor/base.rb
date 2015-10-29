@@ -3,7 +3,9 @@
 class Jsm::EventExecutor::Base
   attr_reader :validators
   def initialize(params = {})
-    @validators = params[:validators] || Jsm::Validators.new
+    @state_machine = params[:state_machine]
+    @validators = @state_machine.validators
+
   end
 
   # it execute event for the object.
