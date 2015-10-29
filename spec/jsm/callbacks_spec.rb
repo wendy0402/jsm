@@ -15,13 +15,13 @@ describe Jsm::Callbacks do
     end
 
     def upsize(logger_io, name, number)
-      run_callback :upsize, logger_io, name, number do
+      self.class.run_callback :upsize, logger_io, name, number do
         @words += "#{name} on #{number}"
       end
     end
 
     def test_no_callbacks
-      run_callback :no_callbacks do
+      self.class.run_callback :no_callbacks do
         @words = 'test'
       end
     end
