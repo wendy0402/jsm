@@ -1,5 +1,5 @@
 class Jsm::EventExecutor::ActiveRecord < Jsm::EventExecutor::ActiveModel
-  def execute(event, obj)
+  def execute_action(event, obj)
     if can_be_executed?(event, obj)
       result = false
       # do transaction to prevent shit happen
