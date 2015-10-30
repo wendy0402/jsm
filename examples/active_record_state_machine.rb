@@ -25,6 +25,14 @@ class ActiveRecordSM < Jsm::Base
     transition from: "married", to: "divorced"
   end
 
+  before :marry do |user|
+    user.name = 'testBefore'
+  end
+
+  after :marry do |result, user|
+    user.name = ' testAfter'
+  end
+
   validate "married" do |user|
     unless user.approved_by_parents
       user.errors.add(:approved_by_parents, 'can not marry, you havent been approved')
