@@ -169,6 +169,61 @@ user.upgrade_title # true
 user.title # :intermediate
 ```
 
+### Callbacks
+`Jsm` now support callbacks. It provide 2 API: `before` and `after`. basically `before` callbacks is run before do event. Meanwhile, after callbacks is run after event. For **note**, after event first argument is `result` of the event
+```ruby
+class UserStateMachine < Jsm::Base
+  attribute_name :level
+
+  state :beginner
+  state :intermediate
+  state :master
+
+  event :upgrade_title do
+    transition from: [:beginner], to: :intermediate
+    transition from: [:intermediate], to: :master
+  end
+
+  event :downgrade_title do
+    transition from: :intermediate, to: :beginner
+    transition from: :master, to: :intermediate
+  end
+
+  before :upgrade_title do |user|
+    user.name = 'before'
+  end
+
+  after :upgrade_title do |result, user| # the first parameters is result of the event
+    if result
+      # execute is transition in event is success
+      user.name += ' after success'
+    else
+      # execute is transition in event is failed
+      user.name += 'after failed'
+    end
+  end
+end
+
+# Client Class
+class User
+  include Jsm::Client
+  jsm_use UserStateMachine # your state machine class here
+
+  attr_accessor :title, :name # same with attribute_name in UserStateMachine
+  def initialize
+	  @title = :beginner
+	  @level = 1
+  end
+  #your code here
+end
+
+user = User.new
+user.title # :beginner
+user.name # nil
+user.upgrade_title # true(it still return the original return value of the event)
+user.name # before after success
+```
+
 ## Active Model Integration
 ```ruby
 class UserStateMachine < Jsm::Base
@@ -223,7 +278,7 @@ end
 
 ### Validation
 It also support validation from `ActiveModel` . Validation checked based on `errors` value in the `instance`. you can add an error to the errors object. This will prevent the state from being changed
-```
+```ruby
 user = User.new
 user.level # 1
 user.level = 18
