@@ -23,6 +23,14 @@ class UserStateMachine < Jsm::Base
   event :divorce do
     transition from: :married, to: :divorced
   end
+
+  before :marry do |obj|
+    obj.name = 'testBefore'
+  end
+
+  after :marry do |result, obj|
+    obj.name += ' testAfterthis'
+  end
 end
 
 
@@ -30,7 +38,7 @@ class UserBasic
   include Jsm::Client
   jsm_use UserStateMachine
 
-  attr_accessor :relationship
+  attr_accessor :relationship, :name
   def initialize(relationship = nil)
     @relationship = relationship
   end

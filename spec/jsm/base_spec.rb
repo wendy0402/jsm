@@ -1,7 +1,7 @@
 describe Jsm::Base do
   let(:simple_model) { create_class_simple_model }
 
-  let(:state_machine) { Class.new(Jsm::Base) }
+  let(:state_machine) { Class.new(Jsm::Base){  attribute_name :my_state } }
 
   describe '#state' do
     it 'can add new state' do
@@ -123,4 +123,43 @@ describe Jsm::Base do
       end
     end
   end
+
+  describe 'callbacks' do
+    before do
+      state_machine.state :x
+      state_machine.state :y
+
+      state_machine.event :confirm do
+        transition from: :x, to: :y
+      end
+    end
+
+    context "before exists" do
+      let(:instance) { simple_model.new(:x) }
+      before do
+        state_machine.before :confirm do |obj|
+          obj.name = 'testMe'
+        end
+        state_machine.new(simple_model)
+      end
+
+      it { expect{ instance.confirm }.to change{ instance.name }.from(nil).to('testMe')}
+      it { expect{ instance.confirm }.to change{ instance.my_state }.from(:x).to(:y) }
+      it { expect(instance.confirm).to be_truthy }
+    end #context
+
+    context 'before callback with event not registered' do
+      let(:instance) { simple_model.new(:x) }
+      before do
+        state_machine.new(simple_model)
+      end
+      it 'raise error' do
+        expect do
+          state_machine.before :confirm2 do |obj|
+            obj.name = 'testMe'
+          end
+        end.to raise_error(Jsm::InvalidEventError, 'event confirm2 has not been registered')
+      end # it
+    end # context
+  end #describe
 end

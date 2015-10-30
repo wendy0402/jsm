@@ -1,21 +1,24 @@
 describe Jsm::EventExecutor::Base do
   let(:simple_model) { create_class_simple_model }
   let(:instance_model) { simple_model.new }
-  let(:states) { Jsm::States.new }
-  let(:event) { Jsm::Event.new(:action, states: states) }
-  let(:validators) { Jsm::Validators.new }
-
+  let(:simple_sm) do
+    Class.new(Jsm::Base) do
+      attribute_name :my_state
+      state :x
+      state :y
+      event :action do
+        transition from: :x, to: :y
+      end
+    end #class
+  end
+  let(:event) { simple_sm.events[:action] }
+  let(:event_executor) { Jsm::EventExecutor::Base.new(state_machine: simple_sm) }
   before do
     instance_model.my_state = :x
-    states.add_state(:x)
-    states.add_state(:y)
-    event.transition from: :x, to: :y
   end
 
   describe '.execute' do
     context 'validation empty' do
-      let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
-
       it 'change state if transition can be done' do
         event_executor.execute(event, instance_model)
         expect(instance_model.current_state).to eq(:y)
@@ -23,16 +26,10 @@ describe Jsm::EventExecutor::Base do
     end
 
     context 'with validation' do
-      let(:validator) do
-        Jsm::Validator.new(:state, :y) do |obj|
+      before do
+        simple_sm.validate :y do |obj|
           obj.name == 'testMe'
         end
-      end
-
-      let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
-
-      before do
-        validators.add_validator(:y, validator)
       end
 
       it 'if not valid, then dont do transition eventhough possible' do
@@ -55,20 +52,33 @@ describe Jsm::EventExecutor::Base do
         expect(result).to be_falsey
         expect(instance_model.current_state).to eq(:z)
       end
+    end # context
+
+    context 'callbacks' do
+      let(:logger_io) { StringIO.new }
+      before do
+        simple_sm.before :action do |obj|
+          obj.name = 'before'
+        end
+
+        simple_sm.after :action do |result, obj|
+          obj.name += ' after'
+        end
+      end
+
+      it 'run the callbacks when run an event' do
+        event_executor.execute(event, instance_model)
+        expect(instance_model.my_state).to eq(:y)
+        expect(instance_model.name).to eq('before after')
+      end
     end
   end #describe .execute
 
   describe 'can_be_executed' do
-    let(:validator) do
-      Jsm::Validator.new(:state, :y) do |obj|
+    before do
+      simple_sm.validate :y do |obj|
         obj.name == 'testMe'
       end
-    end
-
-    let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
-
-    before do
-      validators.add_validator(:y, validator)
     end
 
     it 'passed validation and transition is possible' do
@@ -89,8 +99,6 @@ describe Jsm::EventExecutor::Base do
   end
 
   describe 'executed!' do
-    let(:event_executor) { Jsm::EventExecutor::Base.new(validators: validators) }
-
     it 'if transition change current state' do
       result = event_executor.execute(event, instance_model)
       expect(result).to be_truthy
@@ -101,6 +109,29 @@ describe Jsm::EventExecutor::Base do
       instance_model.my_state = :z
       expect{ event_executor.execute!(event, instance_model) }.to raise_error Jsm::IllegalTransitionError, "there is no matching transitions or invalid, Cant do event action"
       expect(instance_model.current_state).to eq(:z)
+    end
+
+    context 'callbacks' do
+      before do
+        simple_sm.before :action do |obj|
+          obj.name = 'before'
+        end
+
+        simple_sm.after :action do |result, obj|
+          obj.name += ' after'
+        end
+      end
+      it 'run all callbacks when success and change state' do
+        event_executor.execute!(event, instance_model)
+        expect(instance_model.my_state).to eq(:y)
+        expect(instance_model.name).to eq('before after')
+      end
+
+      it 'run before callbacks only when event failed' do
+        instance_model.my_state = :z
+        expect{ event_executor.execute!(event, instance_model)}.to raise_error Jsm::IllegalTransitionError,  "there is no matching transitions or invalid, Cant do event action"
+        expect(instance_model.name).to eq('before')
+      end
     end
   end
 end
