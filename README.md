@@ -148,6 +148,19 @@ class UserStateMachine < Jsm::Base
     transition from: :intermediate, to: :beginner
     transition from: :master, to: :intermediate
   end
+
+
+  before :upgrade_title do |user|
+    user.name = 'before'
+  end
+
+  after :upgrade_title do |result, user|
+    if result
+      user.name += ' after success'
+    else
+      user.name += 'after failed'
+    end
+  end
 end
 
 # Client Class
@@ -155,7 +168,7 @@ class User
   include Jsm::Client
   jsm_use UserStateMachine # your state machine class here
 
-  attr_accessor :title # same with attribute_name in UserStateMachine
+  attr_accessor :title, :name # same with attribute_name in UserStateMachine
   def initialize
 	  @title = :beginner
 	  @level = 1
@@ -204,10 +217,10 @@ class UserStateMachine < Jsm::Base
 
   after :upgrade_title do |result, user| # the first parameters is result of the event
     if result
-      # execute is transition in event is success
+      # execute if transition in event is success
       user.name += ' after success'
     else
-      # execute is transition in event is failed
+      # execute if transition in event is failed
       user.name += 'after failed'
     end
   end
