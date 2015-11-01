@@ -24,7 +24,6 @@
 
 class Jsm::Callbacks::Chain
   attr_reader :context, :callbacks
-  FILTER_TYPES_POSITION = [:before, :after]
   def initialize(context)
     @context = context
     @callbacks = []
