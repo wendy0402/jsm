@@ -29,6 +29,7 @@ To use `JSM`, a state machine class need to be created. Define your state machin
 * transition
 * state validation
 * attribute(the client state value)
+* callback
 
 ```ruby
 class UserStateMachine < Jsm::Base
@@ -340,10 +341,9 @@ class UserStateMachine < Jsm::Base
 end
 
 # Client Class
-class User
-  include ActiveModel::Model
+class User < ActiveRecord::Base
   include Jsm::Client
-  include Jsm::Client::ActiveModel
+  include Jsm::Client::ActiveRecord
   jsm_use UserStateMachine # your state machine class here
 
   attr_accessor :title # same with attribute_name in UserStateMachine
