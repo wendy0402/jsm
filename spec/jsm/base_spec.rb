@@ -57,7 +57,7 @@ describe Jsm::Base do
     end
 
     it 'raise error when validate state which is not exists in states list' do
-      expect { state_machine.validate :j do |model|; end }.to raise_error Jsm::InvalidStateError, "there is no state y"
+      expect { state_machine.validate :j do |model|; end }.to raise_error Jsm::InvalidStateError, "there is no state j"
     end
   end
 
