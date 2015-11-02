@@ -20,21 +20,18 @@ class Jsm::Base
   # example:
   # state :x, initial: true
   def self.state(name, params = {})
-    @states ||= Jsm::States.new
-    @states.add_state(name, initial: params[:initial])
+    raw_states.add_state(name, initial: params[:initial])
   end
 
   # list of all states
   def self.states
-    @states.list
+    raw_states.list
   end
 
   # return initial_state
   # if empty return nil
   def self.initial_state
-    if @states
-     @states.initial_state
-   end
+    raw_states.initial_state
   end
 
   # add new event to the class and add its transition
@@ -53,7 +50,7 @@ class Jsm::Base
 
   # get list of all events
   def self.events
-    @events
+    @events ||= {}
   end
 
   # add validation of a state(when changes to the targeted state, check whether passed this validation or not)
@@ -79,6 +76,10 @@ class Jsm::Base
     if !events[event_name]
       raise Jsm::InvalidEventError, "event #{event_name} has not been registered"
     end
+  end
+
+  def self.raw_states
+    @states ||= Jsm::States.new
   end
 
   def initialize(klass)
