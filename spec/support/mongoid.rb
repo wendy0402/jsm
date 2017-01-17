@@ -25,7 +25,7 @@ Mongoid.configure do |config|
       }
     )
   else
-    config.sessions = {default: {hosts: [hosts], database: 'spectre_test'}}
+    config.sessions = {default: {hosts: [hosts], database: 'jsm_test'}}
   end
 end
 logger = Logger.new("mongoid.log")
