@@ -1,8 +1,9 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'jsm'
 require 'active_record'
-Dir[File.dirname(__FILE__) + "/models/*.rb"].sort.each { |f| require File.expand_path(f) }
 Dir[File.dirname(__FILE__) + "/support/*.rb"].sort.each { |f| require File.expand_path(f) }
+Dir[File.dirname(__FILE__) + "/models/*.rb"].sort.each  { |f| require File.expand_path(f) }
+Dir[File.dirname(__FILE__) + "/shared/*.rb"].sort.each  { |f| require File.expand_path(f) }
 
 RSpec.configure do |config|
   config.before :each do
