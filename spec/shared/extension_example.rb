@@ -1,17 +1,17 @@
-shared_examples "jsm extension spec" do |model_instance|
+shared_examples "jsm extension spec" do |model|
   before :all do
-    model_instance.jsm_use ExtensionExampleSM
+    model.jsm_use ExtensionExampleSM
   end
 
   describe '.current state' do
     it 'get the current value of the state' do
-      user = model_instance.new(relationship: "single")
+      user = model.new(relationship: "single")
       expect(user.current_state).to eq("single")
     end
   end
 
   describe "event method" do
-    let(:user) { model_instance.new(relationship: "single")}
+    let(:user) { model.new(relationship: "single")}
     context 'not valid' do
       it 'dont run transition' do
         expect(user.marry).to be_falsey
@@ -54,7 +54,7 @@ shared_examples "jsm extension spec" do |model_instance|
   end
 
   describe 'can_event? method' do
-    let(:user) { model_instance.new(relationship: "single")}
+    let(:user) { model.new(relationship: "single")}
     context 'not valid' do
       it 'dont run transition' do
         expect(user.can_marry?).to be_falsey
@@ -75,7 +75,7 @@ shared_examples "jsm extension spec" do |model_instance|
   end
 
   describe 'event! method' do
-    let(:user) { model_instance.new(relationship: "single")}
+    let(:user) { model.new(relationship: "single")}
     context 'not valid' do
       it 'dont run transition' do
         expect{ user.marry! }.to raise_error Jsm::IllegalTransitionError, "there is no matching transitions or invalid, Cant do event marry"
@@ -125,7 +125,7 @@ shared_examples "jsm extension spec" do |model_instance|
 
   describe '.jsm_set_state' do
     it 'set the the state value' do
-      user = model_instance.new(relationship: "single")
+      user = model.new(relationship: "single")
       expect{ user.send(:jsm_set_state, "in_relationship") }.to change{ user.current_state }.from("single").to("in_relationship")
     end
   end
