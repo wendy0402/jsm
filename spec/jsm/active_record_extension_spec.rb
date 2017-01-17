@@ -16,7 +16,13 @@ describe ActiveRecord do
   end
 
   before do
-    User.connection.drop_table('users') if User.connection.table_exists?(:users)
+    connection = User.connection
+    ar_version = ActiveRecord.version
+    table_present = (ar_version >= Gem::Version.new("5.0.0") ? connection.data_source_exists?(:users) : connection.table_exists?(:users))
+    if table_present
+      User.connection.drop_table('users')
+    end
+
     User.connection.create_table :users do |a|
       a.string :relationship
       a.string :name
