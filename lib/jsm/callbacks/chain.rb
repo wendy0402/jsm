@@ -45,9 +45,9 @@ class Jsm::Callbacks::Chain
   def arrange_callbacks(*args, &block)
     before = @callbacks.select { |callback| callback.filter_type == :before }
     after = @callbacks.select { |callback| callback.filter_type == :after }
-    before.each {|callback| callback.execute(*args) }
+    before.each { |callback| callback.execute(*args) }
     return_value = block.call(*args)
-    after.each { |callback| callback.execute(return_value, *args) }
+    after.each { |callback| callback.execute(return_value, *args) } if return_value
     return_value
   end
 end

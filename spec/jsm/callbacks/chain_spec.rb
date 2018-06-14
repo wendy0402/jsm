@@ -53,6 +53,16 @@ describe Jsm::Callbacks::Chain do
 
         expect(logger_io.string).to eq('before before2 middle after after2')
       end
+
+      context 'when given block fails' do
+        it 'should not run the callback after' do
+          chain.compile logger_io do |logger_io|
+            false
+          end
+
+          expect(logger_io.string).to eq('before before2')
+        end
+      end
     end
 
     context 'callback before dont exist' do

@@ -71,6 +71,12 @@ describe Jsm::EventExecutor::Base do
         expect(instance_model.my_state).to eq(:y)
         expect(instance_model.name).to eq('before after')
       end
+
+      it 'doesnt run the after callback if execution fails' do
+        instance_model.my_state = :y
+        event_executor.execute(event, instance_model)
+        expect(instance_model.name).to eq('before')
+      end
     end
   end #describe .execute
 
